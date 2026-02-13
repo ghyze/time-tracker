@@ -34,6 +34,9 @@ public class TimeTracker implements Runnable {
         counter = new InputCounter();
         activeWindow = new ActiveWindowWin32();
         records = new ArrayList<ProgramTimeRecord>();
+
+        // Register shutdown hook to close writer properly
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closeWriter));
     }
 
     public void run() {
@@ -123,6 +126,18 @@ public class TimeTracker implements Runnable {
             }
         }
         return hostname;
+    }
+
+    private void closeWriter() {
+        if (writer != null) {
+            try {
+                writer.flush();
+                writer.close();
+                System.out.println("Writer closed successfully");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {
