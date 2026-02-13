@@ -16,4 +16,6 @@ public class Kernel32
 
    public static native Pointer OpenProcess(int dwDesiredAccess, boolean bInheritHandle, Pointer pointer);
 
+   public static native boolean CloseHandle(Pointer hObject);
+
 }
