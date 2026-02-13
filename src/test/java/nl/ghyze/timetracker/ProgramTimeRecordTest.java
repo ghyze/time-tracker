@@ -36,9 +36,44 @@ public class ProgramTimeRecordTest {
 
         String result = record.toFileString();
 
-        // Note: Current implementation doesn't escape commas
-        assertTrue(result.contains("outlook.exe"));
-        assertTrue(result.contains("Email, Draft, Inbox - Outlook"));
+        // RFC 4180: Fields with commas should be quoted
+        String expected = start.getMillis() + "," + end.getMillis() +
+                ",outlook.exe,\"Email, Draft, Inbox - Outlook\",150,8";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testToFileString_handlesQuotesInTitle() {
+        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
+        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+
+        ProgramTimeRecord record = new ProgramTimeRecord(
+                start, end, "Document \"Final\" Version", "word.exe", 100, 10
+        );
+
+        String result = record.toFileString();
+
+        // RFC 4180: Quotes should be doubled and field should be quoted
+        String expected = start.getMillis() + "," + end.getMillis() +
+                ",word.exe,\"Document \"\"Final\"\" Version\",100,10";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testToFileString_handlesCommasInProcessName() {
+        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
+        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+
+        ProgramTimeRecord record = new ProgramTimeRecord(
+                start, end, "Window Title", "process,name.exe", 50, 5
+        );
+
+        String result = record.toFileString();
+
+        // Process names with commas should also be quoted
+        String expected = start.getMillis() + "," + end.getMillis() +
+                ",\"process,name.exe\",Window Title,50,5";
+        assertEquals(expected, result);
     }
 
     @Test

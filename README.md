@@ -28,10 +28,12 @@ The application:
 Each CSV file contains:
 ```
 # Hostname: YOUR-COMPUTER-NAME
-start, end, process, title, keys, clicks
+start,end,process,title,keys,clicks
 1707840000000,1707840123000,notepad.exe,Document1.txt - Notepad,245,12
 1707840123000,1707840456000,chrome.exe,Chrome - Google,182,45
 ```
+
+**Note:** Fields containing commas, quotes, or newlines are automatically quoted following RFC 4180 standard.
 
 Fields:
 - **start/end**: Unix timestamps in milliseconds

@@ -108,7 +108,7 @@ public class TimeTracker {
                 writer = new FileWriter(file, true);
                 if (file.length() == 0) {
                     writer.append("# Hostname: ").append(getHostname()).append("\r\n");
-                    writer.append("start, end, process, title, keys, clicks\r\n");
+                    writer.append("start,end,process,title,keys,clicks\r\n");
                     writer.flush();
                 }
             } catch (Exception ex) {
