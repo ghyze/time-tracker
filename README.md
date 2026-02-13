@@ -53,6 +53,11 @@ mvn clean package
 
 This creates `target/timetracker-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
+Run tests:
+```bash
+mvn test
+```
+
 ## Running
 
 ```bash
