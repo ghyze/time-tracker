@@ -9,18 +9,18 @@ import org.jnativehook.mouse.NativeMouseListener;
 
 import java.util.logging.Level;
 
-public class KeyCounter implements NativeKeyListener, NativeMouseListener {
+public class InputCounter implements NativeKeyListener, NativeMouseListener {
 
     private int keysPressed = 0;
     private int clicks = 0;
 
-    public KeyCounter(){
+    public InputCounter(){
         init();
     }
 
     public static void main(String... args){
-        new KeyCounter();
-        System.out.println("Native key listener registered");
+        new InputCounter();
+        System.out.println("Native input listener registered");
     }
 
     private void init() {
@@ -39,6 +39,7 @@ public class KeyCounter implements NativeKeyListener, NativeMouseListener {
             System.out.println("Error: "+e.getMessage());
         }
         GlobalScreen.addNativeKeyListener(this);
+        GlobalScreen.addNativeMouseListener(this);
     }
 
     @Override

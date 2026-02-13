@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.ghyze.inputcounter.KeyCounter;
+import nl.ghyze.inputcounter.InputCounter;
 import nl.ghyze.timetracker.ActiveWindow;
 import nl.ghyze.timetracker.ProgramTimeRecord;
 import nl.ghyze.timetracker.windows.ActiveWindowWin32;
@@ -20,18 +20,18 @@ public class TimeTracker implements Runnable {
     String lastTitle = "none";
     String lastProcess = "none";
     long lastChange = System.currentTimeMillis();
-    private List<ProgramTimeRecord> records;
+    private final List<ProgramTimeRecord> records;
     private File file;
     private FileWriter writer;
 
     private long lastCheck = 0l;
 
-    private KeyCounter counter;
+    private final InputCounter counter;
 
     private String hostname = null;
 
     public TimeTracker() {
-        counter = new KeyCounter();
+        counter = new InputCounter();
         activeWindow = new ActiveWindowWin32();
         records = new ArrayList<ProgramTimeRecord>();
     }
