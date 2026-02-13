@@ -83,7 +83,7 @@ public class TimeTracker implements Runnable {
                     writer.close();
                 }
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             } finally {
                 writer = null;
             }
@@ -107,7 +107,7 @@ public class TimeTracker implements Runnable {
                 writer.append(record.toFileString() + "\r\n");
                 writer.flush();
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             }
         }
     }
