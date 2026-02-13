@@ -16,7 +16,9 @@ import nl.ghyze.timetracker.ConfigurationService;
 import nl.ghyze.timetracker.ProgramTimeRecord;
 import nl.ghyze.timetracker.windows.ActiveWindowWin32;
 
-import org.joda.time.DateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class TimeTracker {
 
@@ -73,8 +75,10 @@ public class TimeTracker {
     private void writeRecord() {
         long change = System.currentTimeMillis();
 
-        ProgramTimeRecord record = new ProgramTimeRecord(new DateTime(
-                lastChange), new DateTime(change), lastTitle, lastProcess, counter.getKeys(), counter.getClicks());
+        ProgramTimeRecord record = new ProgramTimeRecord(
+                Instant.ofEpochMilli(lastChange),
+                Instant.ofEpochMilli(change),
+                lastTitle, lastProcess, counter.getKeys(), counter.getClicks());
         records.add(record);
         writeToFile(record);
 
@@ -85,7 +89,9 @@ public class TimeTracker {
     }
 
     private void writeToFile(ProgramTimeRecord record) {
-        String fileName = record.start().toString("yyyyMMdd") + ".csv";
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+                .withZone(ZoneId.systemDefault());
+        String fileName = dateFormatter.format(record.start()) + ".csv";
         if (file == null || !file.getName().equals(fileName)) {
             File outputDir = new File(config.getOutputDirectory());
             if (!outputDir.exists()) {

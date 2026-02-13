@@ -1,7 +1,8 @@
 package nl.ghyze.timetracker;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.time.Instant;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +10,8 @@ public class ProgramTimeRecordTest {
 
     @Test
     public void testToFileString_formatsCorrectly() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 35, 30, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:35:30Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Document.txt - Notepad", "notepad.exe", 245, 12
@@ -19,7 +20,7 @@ public class ProgramTimeRecordTest {
         String result = record.toFileString();
 
         // Format: start,end,process,title,keys,clicks
-        String expected = start.getMillis() + "," + end.getMillis() +
+        String expected = start.toEpochMilli() + "," + end.toEpochMilli() +
                 ",notepad.exe,Document.txt - Notepad,245,12";
 
         assertEquals(expected, result);
@@ -27,8 +28,8 @@ public class ProgramTimeRecordTest {
 
     @Test
     public void testToFileString_handlesCommasInTitle() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:35:00Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Email, Draft, Inbox - Outlook", "outlook.exe", 150, 8
@@ -37,15 +38,15 @@ public class ProgramTimeRecordTest {
         String result = record.toFileString();
 
         // RFC 4180: Fields with commas should be quoted
-        String expected = start.getMillis() + "," + end.getMillis() +
+        String expected = start.toEpochMilli() + "," + end.toEpochMilli() +
                 ",outlook.exe,\"Email, Draft, Inbox - Outlook\",150,8";
         assertEquals(expected, result);
     }
 
     @Test
     public void testToFileString_handlesQuotesInTitle() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:35:00Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Document \"Final\" Version", "word.exe", 100, 10
@@ -54,15 +55,15 @@ public class ProgramTimeRecordTest {
         String result = record.toFileString();
 
         // RFC 4180: Quotes should be doubled and field should be quoted
-        String expected = start.getMillis() + "," + end.getMillis() +
+        String expected = start.toEpochMilli() + "," + end.toEpochMilli() +
                 ",word.exe,\"Document \"\"Final\"\" Version\",100,10";
         assertEquals(expected, result);
     }
 
     @Test
     public void testToFileString_handlesCommasInProcessName() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:35:00Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Window Title", "process,name.exe", 50, 5
@@ -71,15 +72,15 @@ public class ProgramTimeRecordTest {
         String result = record.toFileString();
 
         // Process names with commas should also be quoted
-        String expected = start.getMillis() + "," + end.getMillis() +
+        String expected = start.toEpochMilli() + "," + end.toEpochMilli() +
                 ",\"process,name.exe\",Window Title,50,5";
         assertEquals(expected, result);
     }
 
     @Test
     public void testToFileString_zeroInputCounts() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 30, 5, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:30:05Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Idle", "", 0, 0
@@ -92,8 +93,8 @@ public class ProgramTimeRecordTest {
 
     @Test
     public void testToString_includesAllFields() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 30, 15, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:30:15Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Chrome - Google", "chrome.exe", 50, 5
@@ -111,8 +112,8 @@ public class ProgramTimeRecordTest {
 
     @Test
     public void testGetters() {
-        DateTime start = new DateTime(2024, 1, 15, 10, 30, 0, 0);
-        DateTime end = new DateTime(2024, 1, 15, 10, 35, 0, 0);
+        Instant start = Instant.parse("2024-01-15T10:30:00Z");
+        Instant end = Instant.parse("2024-01-15T10:35:00Z");
 
         ProgramTimeRecord record = new ProgramTimeRecord(
                 start, end, "Test Window", "test.exe", 100, 20
