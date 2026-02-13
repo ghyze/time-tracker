@@ -9,6 +9,7 @@ import java.util.List;
 
 import nl.ghyze.inputcounter.InputCounter;
 import nl.ghyze.timetracker.ActiveWindow;
+import nl.ghyze.timetracker.ConfigurationService;
 import nl.ghyze.timetracker.ProgramTimeRecord;
 import nl.ghyze.timetracker.windows.ActiveWindowWin32;
 
@@ -27,10 +28,12 @@ public class TimeTracker implements Runnable {
     private long lastCheck = 0l;
 
     private final InputCounter counter;
+    private final ConfigurationService config;
 
     private String hostname = null;
 
     public TimeTracker() {
+        config = new ConfigurationService();
         counter = new InputCounter();
         activeWindow = new ActiveWindowWin32();
         records = new ArrayList<ProgramTimeRecord>();
@@ -44,7 +47,7 @@ public class TimeTracker implements Runnable {
         while (true) {
             check();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(config.getPollingIntervalMs());
             } catch (InterruptedException ex) {
                 // ignore
             }
@@ -55,7 +58,7 @@ public class TimeTracker implements Runnable {
         long current = System.currentTimeMillis();
         if (!lastTitle.equals(activeWindow.getActiveWindowTitle())) {
             writeRecord();
-        } else if (lastCheck > 0 && lastCheck < current - 3000) {
+        } else if (lastCheck > 0 && lastCheck < current - config.getInactivityTimeoutMs()) {
             lastProcess = "";
             lastTitle = "";
             writeRecord();
@@ -80,7 +83,11 @@ public class TimeTracker implements Runnable {
     private void writeToFile(ProgramTimeRecord record) {
         String fileName = record.getStart().toString("yyyyMMdd") + ".csv";
         if (file == null || !file.getName().equals(fileName)) {
-            file = new File(fileName);
+            File outputDir = new File(config.getOutputDirectory());
+            if (!outputDir.exists()) {
+                outputDir.mkdirs();
+            }
+            file = new File(outputDir, fileName);
             try {
                 if (writer != null) {
                     writer.close();

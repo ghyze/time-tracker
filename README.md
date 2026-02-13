@@ -59,7 +59,26 @@ This creates `target/timetracker-1.0-SNAPSHOT-jar-with-dependencies.jar`
 java -jar target/timetracker-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-The application runs continuously until terminated (Ctrl+C). CSV files are created in the current directory.
+The application runs continuously until terminated (Ctrl+C).
+
+On first run, a configuration file is created at `~/.timetracker/config.properties` with default settings. CSV files are created in the configured output directory (current directory by default).
+
+## Configuration
+
+The application can be customized by editing `~/.timetracker/config.properties`:
+
+```properties
+# Polling interval in milliseconds
+polling.interval.ms=1000
+
+# Inactivity timeout in milliseconds
+inactivity.timeout.ms=3000
+
+# Output directory for CSV files
+output.directory=.
+```
+
+This file is automatically created with defaults on first run.
 
 ## Platform Support
 
