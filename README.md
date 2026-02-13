@@ -28,15 +28,15 @@ The application:
 Each CSV file contains:
 ```
 # Hostname: YOUR-COMPUTER-NAME
-start, end, title, process, keys, clicks
-1707840000000,1707840123000,Document1.txt - Notepad,notepad.exe,245,12
-1707840123000,1707840456000,Chrome - Google,chrome.exe,182,45
+start, end, process, title, keys, clicks
+1707840000000,1707840123000,notepad.exe,Document1.txt - Notepad,245,12
+1707840123000,1707840456000,chrome.exe,Chrome - Google,182,45
 ```
 
 Fields:
 - **start/end**: Unix timestamps in milliseconds
-- **title**: Window title text
 - **process**: Executable name
+- **title**: Window title text
 - **keys**: Number of keystrokes during this session
 - **clicks**: Number of mouse clicks during this session
 
