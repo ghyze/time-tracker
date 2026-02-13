@@ -6,6 +6,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import nl.ghyze.inputcounter.InputCounter;
 import nl.ghyze.timetracker.ActiveWindow;
@@ -15,7 +18,7 @@ import nl.ghyze.timetracker.windows.ActiveWindowWin32;
 
 import org.joda.time.DateTime;
 
-public class TimeTracker implements Runnable {
+public class TimeTracker {
 
     ActiveWindow activeWindow;
     String lastTitle = "none";
@@ -29,6 +32,7 @@ public class TimeTracker implements Runnable {
 
     private final InputCounter counter;
     private final ConfigurationService config;
+    private final ScheduledExecutorService scheduler;
 
     private String hostname = null;
 
@@ -37,21 +41,21 @@ public class TimeTracker implements Runnable {
         counter = new InputCounter();
         activeWindow = new ActiveWindowWin32();
         records = new ArrayList<ProgramTimeRecord>();
+        scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        // Register shutdown hook to close writer properly
-        Runtime.getRuntime().addShutdownHook(new Thread(this::closeWriter));
+        // Register shutdown hook to close resources properly
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
-    public void run() {
-
-        while (true) {
-            check();
-            try {
-                Thread.sleep(config.getPollingIntervalMs());
-            } catch (InterruptedException ex) {
-                // ignore
-            }
-        }
+    public void start() {
+        long intervalMs = config.getPollingIntervalMs();
+        scheduler.scheduleAtFixedRate(
+                this::check,
+                0,
+                intervalMs,
+                TimeUnit.MILLISECONDS
+        );
+        System.out.println("Time tracker started with polling interval: " + intervalMs + "ms");
     }
 
     private void check() {
@@ -135,7 +139,20 @@ public class TimeTracker implements Runnable {
         return hostname;
     }
 
-    private void closeWriter() {
+    private void shutdown() {
+        System.out.println("Shutting down time tracker...");
+
+        // Shutdown scheduler
+        scheduler.shutdown();
+        try {
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            scheduler.shutdownNow();
+        }
+
+        // Close writer
         if (writer != null) {
             try {
                 writer.flush();
@@ -149,6 +166,13 @@ public class TimeTracker implements Runnable {
 
     public static void main(String[] args) {
         TimeTracker tracker = new TimeTracker();
-        tracker.run();
+        tracker.start();
+
+        // Keep application running
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException ex) {
+            System.out.println("Application interrupted");
+        }
     }
 }
