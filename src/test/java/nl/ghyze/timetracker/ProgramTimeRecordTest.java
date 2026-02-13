@@ -118,9 +118,9 @@ public class ProgramTimeRecordTest {
                 start, end, "Test Window", "test.exe", 100, 20
         );
 
-        assertEquals(start, record.getStart());
-        assertEquals(end, record.getEnd());
-        assertEquals("Test Window", record.getWindowTitle());
-        assertEquals("test.exe", record.getProcessName());
+        assertEquals(start, record.start());
+        assertEquals(end, record.end());
+        assertEquals("Test Window", record.windowTitle());
+        assertEquals("test.exe", record.processName());
     }
 }

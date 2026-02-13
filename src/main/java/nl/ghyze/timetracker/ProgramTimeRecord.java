@@ -3,51 +3,31 @@ package nl.ghyze.timetracker;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-public class ProgramTimeRecord
-{
-   private final DateTime start;
-   private final DateTime end;
-   private final String windowTitle;
-   private final String processName;
-   private final int keys;
-   private final int clicks;
-   
-   public ProgramTimeRecord(DateTime start, DateTime end, String windowTitle, String processName, int keys, int clicks){
-      this.start = start;
-      this.end = end;
-      this.windowTitle = windowTitle;
-      this.processName = processName;
-      this.keys = keys;
-      this.clicks = clicks;
+/**
+ * Immutable record representing a time tracking entry.
+ * Records the active window, process, and input activity for a time period.
+ */
+public record ProgramTimeRecord(
+      DateTime start,
+      DateTime end,
+      String windowTitle,
+      String processName,
+      int keys,
+      int clicks
+) {
+
+   public String toFileString() {
+      return start.getMillis() + "," + end.getMillis() + "," +
+             escapeCsv(processName) + "," + escapeCsv(windowTitle) + "," +
+             keys + "," + clicks;
    }
 
-   public DateTime getStart()
-   {
-      return start;
-   }
-
-   public DateTime getEnd()
-   {
-      return end;
-   }
-
-   public String getWindowTitle()
-   {
-      return windowTitle;
-   }
-
-   public String getProcessName()
-   {
-      return processName;
-   }
-   
-   public String toFileString(){
-      return start.getMillis()+","+end.getMillis()+","+escapeCsv(processName)+","+escapeCsv(windowTitle)+","+keys+","+clicks;
-   }
-
-   public String toString(){
+   @Override
+   public String toString() {
       Duration duration = new Duration(start, end);
-      return start.toString("HH:mm:ss")+": ["+windowTitle+"],["+processName+"],["+duration.getStandardSeconds()+" seconds, " + keys + " keys, "+clicks+" clicks]";
+      return start.toString("HH:mm:ss") + ": [" + windowTitle + "],[" + processName +
+             "],[" + duration.getStandardSeconds() + " seconds, " + keys + " keys, " +
+             clicks + " clicks]";
    }
 
    /**

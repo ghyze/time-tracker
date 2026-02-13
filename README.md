@@ -45,7 +45,7 @@ Fields:
 ## Building
 
 Requirements:
-- Java 7 or later
+- Java 17 or later
 - Maven
 
 Build the executable JAR:

@@ -85,7 +85,7 @@ public class TimeTracker {
     }
 
     private void writeToFile(ProgramTimeRecord record) {
-        String fileName = record.getStart().toString("yyyyMMdd") + ".csv";
+        String fileName = record.start().toString("yyyyMMdd") + ".csv";
         if (file == null || !file.getName().equals(fileName)) {
             File outputDir = new File(config.getOutputDirectory());
             if (!outputDir.exists()) {
