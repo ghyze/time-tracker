@@ -11,8 +11,8 @@ import java.util.logging.Level;
 
 public class InputCounter implements NativeKeyListener, NativeMouseListener {
 
-    private int keysPressed = 0;
-    private int clicks = 0;
+    private volatile int keysPressed = 0;
+    private volatile int clicks = 0;
 
     public InputCounter(){
         init();

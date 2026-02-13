@@ -20,10 +20,10 @@ import org.joda.time.DateTime;
 
 public class TimeTracker {
 
-    ActiveWindow activeWindow;
-    String lastTitle = "none";
-    String lastProcess = "none";
-    long lastChange = System.currentTimeMillis();
+    private final ActiveWindow activeWindow;
+    private String lastTitle = "none";
+    private String lastProcess = "none";
+    private long lastChange = System.currentTimeMillis();
     private final List<ProgramTimeRecord> records;
     private File file;
     private FileWriter writer;

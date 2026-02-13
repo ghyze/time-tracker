@@ -5,12 +5,12 @@ import org.joda.time.Duration;
 
 public class ProgramTimeRecord
 {
-   private DateTime start;
-   private DateTime end;
-   private String windowTitle;
-   private String processName;
-   private int keys;
-   private int clicks;
+   private final DateTime start;
+   private final DateTime end;
+   private final String windowTitle;
+   private final String processName;
+   private final int keys;
+   private final int clicks;
    
    public ProgramTimeRecord(DateTime start, DateTime end, String windowTitle, String processName, int keys, int clicks){
       this.start = start;
