@@ -27,9 +27,17 @@ public class ActiveWindowWin32 implements ActiveWindow
       HWND foregroundWindow = User32DLL.GetForegroundWindow();
       User32DLL.GetWindowThreadProcessId(foregroundWindow, pointer);
       Pointer process = Kernel32.OpenProcess(Kernel32.PROCESS_QUERY_INFORMATION | Kernel32.PROCESS_VM_READ, false, pointer.getValue());
-      Psapi.GetModuleBaseNameW(process, null, buffer, MAX_TITLE_LENGTH);
-      String processName = Native.toString(buffer);
-      return processName;
+
+      try {
+         Psapi.GetModuleBaseNameW(process, null, buffer, MAX_TITLE_LENGTH);
+         String processName = Native.toString(buffer);
+         return processName;
+      } finally {
+         // Always close the process handle to prevent handle leaks
+         if (process != null) {
+            Kernel32.CloseHandle(process);
+         }
+      }
    }
 
 }
