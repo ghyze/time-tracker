@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 import nl.ghyze.inputcounter.InputCounter;
 import nl.ghyze.timetracker.ActiveWindow;
+import nl.ghyze.timetracker.ActiveWindowFactory;
 import nl.ghyze.timetracker.ConfigurationService;
 import nl.ghyze.timetracker.ProgramTimeRecord;
-import nl.ghyze.timetracker.windows.ActiveWindowWin32;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -41,7 +41,7 @@ public class TimeTracker {
     public TimeTracker() {
         config = new ConfigurationService();
         counter = new InputCounter();
-        activeWindow = new ActiveWindowWin32();
+        activeWindow = ActiveWindowFactory.create();
         records = new ArrayList<ProgramTimeRecord>();
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
